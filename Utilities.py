@@ -61,13 +61,3 @@ def print_data2(values):
 def print_data1(values):
     for value in values:
         print("'" + str(value) + "'")
-
-def print_data(values):
-    if not values:
-        print('No data found.')
-    else:
-        print('Envelope name, Amount, Amount spent, Amount left, %spent')
-        for row in values:
-            # Print columns A, B, C, D, E
-            if (len(row) >= 5):
-                print('%s, %s, %s, %s, %s' % (row[0], row[1], row[2], row[3], row[4]))
