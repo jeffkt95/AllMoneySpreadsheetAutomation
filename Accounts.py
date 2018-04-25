@@ -13,12 +13,12 @@ class Accounts:
         self.accounts.append(newAccount)
         
     def getAccountsFromMintCopy(self, allMoneyData):
-        #self.addAccount("Fairwinds", 1000)
-        #self.addAccount("401K", 2000)
-        
         lines = allMoneyData.split("\n")
         
         for line in lines:
+            #Remove the carriage return. It screws things up.
+            line = line.replace("\r", "")
+
             periodIndex = line.find(".")
             if (periodIndex != -1 and periodIndex + 3 < len(line)):
                 amount = line[:periodIndex+3]

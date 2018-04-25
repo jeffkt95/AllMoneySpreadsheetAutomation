@@ -31,6 +31,10 @@ def is_number(s):
     except ValueError:
         return False
   
+def getDateStr():
+    now = datetime.datetime.now()
+    return str(now.strftime("%m/%d/%Y"))
+
 def isDate(possibleDate):
     try:
         datetime.datetime.strptime(possibleDate, '%m/%d/%Y')

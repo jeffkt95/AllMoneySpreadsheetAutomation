@@ -9,7 +9,6 @@ import webbrowser
 import Utilities
 
 class GoogleSheetInterface:
-    #This is the ID of my test spreadsheet right now. Note this ID is simply the URL of the spreadsheet.
     SCOPES = 'https://www.googleapis.com/auth/drive'
     CLIENT_SECRET_FILE = 'client_secret.json'
     APPLICATION_NAME = 'Google Sheets API Python Quickstart'
@@ -145,6 +144,34 @@ class GoogleSheetInterface:
         self.service.spreadsheets().batchUpdate(
             spreadsheetId=self.spreadsheetId, body=myBody).execute()
 
+    #Argument rows are 1-based
+    def copyPastePartOfRow(self, worksheetName, sourceRow, destinationRow, startColumnIndex, endColumnIndex):
+        worksheetId = self.getWorksheetIdByName(worksheetName)
+        
+        myBody = {u'requests': [
+        {
+            u'copyPaste': {
+                u'source': {
+                    u'sheetId': str(worksheetId),
+                    u'startRowIndex': str(sourceRow-1),     #Convert 1-based rows to 0-based indices
+                    u'endRowIndex': str(sourceRow),
+                    u'startColumnIndex': str(startColumnIndex),
+                    u'endColumnIndex': str(endColumnIndex)
+                },
+                u'destination': {
+                    u'sheetId': str(worksheetId),
+                    u'startRowIndex': str(destinationRow-1),
+                    u'endRowIndex': str(destinationRow),       
+                    u'startColumnIndex': str(startColumnIndex),
+                    u'endColumnIndex': str(endColumnIndex)
+                }
+            }
+        }
+        ]}
+
+        self.service.spreadsheets().batchUpdate(
+            spreadsheetId=self.spreadsheetId, body=myBody).execute()
+
     def insertColumn(self, columnIndex, worksheetName):
         worksheetId = self.getWorksheetIdByName(worksheetName)
         
@@ -216,6 +243,27 @@ class GoogleSheetInterface:
                 return theProperties.get('sheetId')
 
         raise SheetNotFoundError(worksheetName, "getWorksheetIdByName, sheet '" + worksheetName + "' not found.")
+    
+    def getRowOfNamedRange(self, namedRange):
+        namedRangeResponse = self.getResultsSet(namedRange)
+        
+        address = namedRangeResponse['range']
+        #Get the chars between the ! and the :
+        exclamationIndex = address.find("!")
+        colonIndex = address.find(":")
+        firstCell = address[exclamationIndex+1:colonIndex]
+        
+        #Check the first three characters to see if they are letters (the column)
+        startIndex = 0
+        for i in range(0,2):
+            charToCheck = firstCell[i:i+1]
+            if (Utilities.is_number(charToCheck) == False):
+                startIndex = i+1
+            else:
+                break
+                
+        row = firstCell[startIndex:]
+        return int(row)
     
     def getFirstEmptyRow(self, worksheetName, startRow = 1):
         #Use 0-based index. Change based to 1-based row index on return

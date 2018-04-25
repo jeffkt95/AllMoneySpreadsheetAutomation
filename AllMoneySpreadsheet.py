@@ -1,79 +1,61 @@
 from GoogleSheetInterface import GoogleSheetInterface
 from GoogleSheetsTable import GoogleSheetsTable
+from MintAccountsNameMap import MintAccountNotFound
 import Utilities
 
 class AllMoneySpreadsheet(GoogleSheetInterface):
-    #This is the ID of my test spreadsheet right now. Note this ID is simply the URL of the spreadsheet.
+    #This is the ID of my test spreadsheet. Note this ID is simply the URL of the spreadsheet.
     TEST_SPREADSHEET_ID = '1MqfeN82WwZrRYT0wVPOGZSycg1-9bxNiPCYfDbHfFJA'
     REAL_SPREADSHEET_ID = '1wdMoEie0DjtNiMMkr11sVis5lO99aiwJJaLPl-u8JUk'
-    #SPENT_TOTAL_NAMED_RANGE = "SpentTotal"
-    #ENVELOPE_DATE_NAMED_RANGE = "AllEnvelopeData"
-    #AMOUNT_SPENT_NAMED_RANGE = "AmountSpent"
     LAST_ROW_NAMED_RANGE = "lastDataRow"
 
     SHEET_NAME = "Data"
-
+    
+    #From START_COLUMN_COPY to END_COLUMN_COPY are calc'd cells that should just be copied from previous row.
+    START_COLUMN_COPY = 14
+    END_COLUMN_COPY = 19
+    
     def __init__(self):
         GoogleSheetInterface.__init__(self, self.TEST_SPREADSHEET_ID)
-        #self.mEnvelopesTable = GoogleSheetsTable(self, "A", "B", 3, 32, self.SHEET_NAME)
         
-    #def getEnvelopesTable(self):
-    #    return self.mEnvelopesTable
-        
-    #def loadEnvelopeData(self):
-    #    result = self.service.spreadsheets().values().get(spreadsheetId=self.spreadsheetId, 
-    #                                                        range=self.ENVELOPE_DATE_NAMED_RANGE).execute()
-    #    return result
-    
-    #def addToTotal(self, amountToAdd):
-    #    totalCellAddress = "'" + self.SHEET_NAME + "'!" + self.TOTAL_CELL
-    #    self.addToCell(totalCellAddress, amountToAdd)
-    
     def addNewRowForData(self):
-        #Skip first two empty rows; start in row 3
-        rowNumber = self.getFirstEmptyRow(self.SHEET_NAME, 3)
+        rowNumber = self.getRowOfNamedRange(self.LAST_ROW_NAMED_RANGE)
         rowAdded = self.addRow(self.SHEET_NAME, rowNumber)
         self.copyPasteRow(self.SHEET_NAME, rowAdded - 1, rowAdded)
         
+        dateStr = Utilities.getDateStr()
+        self.setCellValue("A" + str(rowAdded), dateStr, self.SHEET_NAME)
+
         #Clear all data
-        #Remove data in columns 2 through 13, except for 5 and 11
+        #Remove data in columns 2 through 13
+        #TODO: Do this as a batch so it doesn't take so long?
         self.setCellValue("B" + str(rowAdded), "", self.SHEET_NAME)
         self.setCellValue("C" + str(rowAdded), "", self.SHEET_NAME)
         self.setCellValue("D" + str(rowAdded), "", self.SHEET_NAME)
+        self.setCellValue("E" + str(rowAdded), "", self.SHEET_NAME)
         self.setCellValue("F" + str(rowAdded), "", self.SHEET_NAME)
         self.setCellValue("G" + str(rowAdded), "", self.SHEET_NAME)
         self.setCellValue("H" + str(rowAdded), "", self.SHEET_NAME)
         self.setCellValue("I" + str(rowAdded), "", self.SHEET_NAME)
         self.setCellValue("J" + str(rowAdded), "", self.SHEET_NAME)
+        self.setCellValue("K" + str(rowAdded), "", self.SHEET_NAME)
         self.setCellValue("L" + str(rowAdded), "", self.SHEET_NAME)
         self.setCellValue("M" + str(rowAdded), "", self.SHEET_NAME)
         
-        #TODO: set date cell (column A) to today's date
-        
         return rowAdded
     
-    def setAccountDataForRow(self, accounts, rowNum):
-        for account in accounts:
-            accountColumn = self.getAccountColumn(account.name)
-            self.setAccountAmount(rowNum, accountColumn, account.amount)
-        
-    def getAccountColumn(self, accountName):
-        #TODO: find account name
-        return 1
-        
-    #This method takes in the envelopeData, finds the particular envelope, then sets the data
+    def setAccountsData(self, accountsFromMint, mintAccountsNameMap, rowToUpdate):
+        for accountFromMint in accountsFromMint:
+            try:
+                spreadsheetAccount = mintAccountsNameMap.getSpreadsheetAccount(accountFromMint)
+                self.setAccountAmount(rowToUpdate, spreadsheetAccount.getColumn(), accountFromMint.getAmount())
+            
+            except MintAccountNotFound as err:
+                continue
+                #Fail silently. There are some random, unused Mint accounts that aren't in the map, by design.
+                #print(err.message)
+                    
     def setAccountAmount(self, rowNum, accountColumn, amount):
-        print("TODO setAccountAmount for [" + str(rowNum) + ", " + str(accountColumn) + "] = " + str(amount))
-        #envelopeName = envelope.getName()
-        #envelopeSpent = envelope.getAmountSpent()
-
-        #for i in range(0, len(envelopeData)):
-        #    if (envelopeData[i][0] == envelopeName):
-        #        amountSpent[i] = [envelopeSpent]
-                #print("Envelope " + envelopeName + " amount spent changed to " + str(envelopeSpent))
-        #        return amountSpent
-                
-        #If you get down here without returning, you never found the envelope. Return envelopeData unmodified
-        #print("Never found envelope " + envelopeName + "! " + str(envelopeSpent) + " won't be included.")
-        #return amountSpent
+        cellAddress = accountColumn + str(rowNum)
+        self.setCellValue(cellAddress, amount, self.SHEET_NAME)
         

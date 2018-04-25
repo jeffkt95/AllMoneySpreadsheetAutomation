@@ -1,24 +1,31 @@
 import Utilities
 from Accounts import Accounts
 from AllMoneySpreadsheet import AllMoneySpreadsheet
+from MintAccountsNameMap import MintAccountsNameMap
 
 def main():
-    #allMoneyData = Utilities.getClipboard()
-    with open('testData.txt', 'r') as myfile:
-        allMoneyData = myfile.read()
-    #TODO: gracefully handle empty or improperly formatted clipbard
+    accountsCopiedFromMint = Utilities.getClipboard()
+    #with open('testData3.txt', 'r') as myfile:
+    #    accountsCopiedFromMint = myfile.read()
     
-    accounts = Accounts()
-    accounts.getAccountsFromMintCopy(allMoneyData)
+    #TODO: gracefully handle empty or improperly formatted clipboard
     
-    print(accounts)
+    accountsFromMint = Accounts()
+    accountsFromMint.getAccountsFromMintCopy(accountsCopiedFromMint)
+    
+    print(accountsFromMint)
     
     allMoneySpreadsheet = AllMoneySpreadsheet()
+    print("Connecting to spreadsheet...")
     allMoneySpreadsheet.connect()
+    print("Preparing spreadsheet for new data...")
     rowNum = allMoneySpreadsheet.addNewRowForData()
-    print("Added row " + str(rowNum))
-    #allMoneySpreadsheet.setAccountDataForRow(accounts, rowNum)
     
+    mintAccountsNameMap = MintAccountsNameMap(allMoneySpreadsheet)
+    
+    print("Putting mint data into spreadsheet...")
+    allMoneySpreadsheet.setAccountsData(accountsFromMint, mintAccountsNameMap, rowNum)
+    print("Done.")
     
 if __name__ == "__main__":
     main()
