@@ -71,6 +71,17 @@ class GoogleSheetInterface:
         result = self.service.spreadsheets().values().update(
             spreadsheetId=self.spreadsheetId, range=cellAddress, body=myBody, valueInputOption='USER_ENTERED').execute()
     
+    #Sets the value of a single cell
+    #If sheetName is None, the assumption is it's already embedded in the cell address. If not, then the code will concatenate
+    #sheetName and cellAddress to get the full cell address.
+    def setCellsValue(self, cellAddress, value, sheetName = None):
+        if (sheetName is not None):
+            cellAddress = sheetName + "!" + cellAddress
+
+        myBody = {u'range': cellAddress, u'values': value, u'majorDimension': u'COLUMNS'}
+        result = self.service.spreadsheets().values().update(
+            spreadsheetId=self.spreadsheetId, range=cellAddress, body=myBody, valueInputOption='USER_ENTERED').execute()
+    
     #Returns index to added row
     def addRow(self, worksheetName, aboveRow):
         worksheetId = self.getWorksheetIdByName(worksheetName)

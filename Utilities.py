@@ -1,5 +1,6 @@
 import datetime
 import win32clipboard
+from datetime import timedelta
 
 def reverseSign(value):
     #Remove commas. Comma delimiters screw up casting as float.
@@ -34,6 +35,14 @@ def is_number(s):
 def getDateStr():
     now = datetime.datetime.now()
     return str(now.strftime("%m/%d/%Y"))
+
+def getDateStrNumDaysAgo(numDaysAgo = 0):
+    dateToReturn = datetime.datetime.now()
+    
+    for i in range(0, numDaysAgo):
+        dateToReturn = dateToReturn - timedelta(days=1)
+    
+    return str(dateToReturn.strftime("%Y-%m-%d"))
 
 def isDate(possibleDate):
     try:

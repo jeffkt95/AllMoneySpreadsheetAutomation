@@ -2,6 +2,7 @@ import Utilities
 from Accounts import Accounts
 from AllMoneySpreadsheet import AllMoneySpreadsheet
 from MintAccountsNameMap import MintAccountsNameMap
+import StockData
 
 def main():
     accountsCopiedFromMint = Utilities.getClipboard()
@@ -25,6 +26,11 @@ def main():
     
     print("Putting mint data into spreadsheet...")
     allMoneySpreadsheet.setAccountsData(accountsFromMint, mintAccountsNameMap, rowNum)
+    
+    print("Getting the DOW...")
+    dowValue = StockData.getStockPrice("DJI")
+    allMoneySpreadsheet.setDow(rowNum, dowValue)
+    
     print("Done.")
     
 if __name__ == "__main__":
