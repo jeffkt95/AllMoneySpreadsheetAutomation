@@ -8,6 +8,7 @@ class AllMoneySpreadsheet(GoogleSheetInterface):
     TEST_SPREADSHEET_ID = '1MqfeN82WwZrRYT0wVPOGZSycg1-9bxNiPCYfDbHfFJA'
     REAL_SPREADSHEET_ID = '1wdMoEie0DjtNiMMkr11sVis5lO99aiwJJaLPl-u8JUk'
     LAST_ROW_NAMED_RANGE = "lastDataRow"
+    DOW_DATA_COLUMN = "M"
 
     SHEET_NAME = "Data"
     
@@ -16,7 +17,7 @@ class AllMoneySpreadsheet(GoogleSheetInterface):
     END_COLUMN_COPY = 19
     
     def __init__(self):
-        GoogleSheetInterface.__init__(self, self.TEST_SPREADSHEET_ID)
+        GoogleSheetInterface.__init__(self, self.REAL_SPREADSHEET_ID)
         
     def addNewRowForData(self):
         rowNumber = self.getRowOfNamedRange(self.LAST_ROW_NAMED_RANGE)
@@ -26,23 +27,13 @@ class AllMoneySpreadsheet(GoogleSheetInterface):
         dateStr = Utilities.getDateStr()
         self.setCellValue("A" + str(rowAdded), dateStr, self.SHEET_NAME)
 
-        #Clear all data
-        #Remove data in columns 2 through 13
-        #TODO: Do this as a batch so it doesn't take so long?
-        self.setCellValue("B" + str(rowAdded), "", self.SHEET_NAME)
-        self.setCellValue("C" + str(rowAdded), "", self.SHEET_NAME)
-        self.setCellValue("D" + str(rowAdded), "", self.SHEET_NAME)
-        self.setCellValue("E" + str(rowAdded), "", self.SHEET_NAME)
-        self.setCellValue("F" + str(rowAdded), "", self.SHEET_NAME)
-        self.setCellValue("G" + str(rowAdded), "", self.SHEET_NAME)
-        self.setCellValue("H" + str(rowAdded), "", self.SHEET_NAME)
-        self.setCellValue("I" + str(rowAdded), "", self.SHEET_NAME)
-        self.setCellValue("J" + str(rowAdded), "", self.SHEET_NAME)
-        self.setCellValue("K" + str(rowAdded), "", self.SHEET_NAME)
-        self.setCellValue("L" + str(rowAdded), "", self.SHEET_NAME)
-        self.setCellValue("M" + str(rowAdded), "", self.SHEET_NAME)
+        #Clear all data between columns 2 through 13
+        self.setCellsValue("B" + str(rowAdded) + ":M" + str(rowAdded), [[""], [""], [""], [""], [""], [""], [""], [""], [""], [""], [""], [""]], self.SHEET_NAME)
         
         return rowAdded
+        
+    def setDow(self, rowForNewData, dowValue):
+        self.setCellValue(self.DOW_DATA_COLUMN + str(rowForNewData), dowValue, self.SHEET_NAME)
     
     def setAccountsData(self, accountsFromMint, mintAccountsNameMap, rowToUpdate):
         for accountFromMint in accountsFromMint:
