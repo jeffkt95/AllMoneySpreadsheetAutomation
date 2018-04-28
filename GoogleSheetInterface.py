@@ -275,24 +275,7 @@ class GoogleSheetInterface:
                 
         row = firstCell[startIndex:]
         return int(row)
-    
-    def getFirstEmptyRow(self, worksheetName, startRow = 1):
-        #Use 0-based index. Change based to 1-based row index on return
-        rowIndex = 0
-        startIndex = startRow - 1
-        
-        resultsSet = self.getResultsSet(worksheetName + "!A:A")
-        values = resultsSet.get('values', [])
 
-        for i in range(0, len(values)):
-            cellValue = values[i]
-            
-            if (i >= startIndex):
-                if (len(cellValue) == 0):
-                    return i + 1
-
-        print("TODO: throw an error")
-    
     def getNumRowsInWorksheet(self, worksheetName):
         # https://developers.google.com/sheets/samples/sheet#determine_sheet_id_and_other_properties
         result = self.service.spreadsheets().get(spreadsheetId=self.spreadsheetId, fields='sheets.properties').execute()

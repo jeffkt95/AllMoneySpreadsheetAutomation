@@ -28,6 +28,8 @@ def getStockPrice(symbol):
         print("Found " + symbol + " data for date " + dateToCheck + ". Close price is " + closingPrice)
         return closingPrice
     else:
-        print("Couldn't find most recent data!")
-        return -1
-        #TODO: Throw an error
+        raise StockPriceNotFound("Stock price for symbol '" + symbol + "' not found.") 
+                
+class StockPriceNotFound(Exception):
+    def __init__(self, message):
+        self.message = message

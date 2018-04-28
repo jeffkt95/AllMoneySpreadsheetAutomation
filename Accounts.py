@@ -12,7 +12,17 @@ class Accounts:
         newAccount = Account(name, amount)
         self.accounts.append(newAccount)
         
+    #Very simple check that the data is roughly what we expect
+    def properlyFormattedData(self, mintData):
+        if ("ACCOUNTS" in mintData and "WORTH" in mintData):
+            return True
+        else:
+            return False
+        
     def getAccountsFromMintCopy(self, allMoneyData):
+        if (self.properlyFormattedData(allMoneyData) == False):
+            raise ImproperlyFormattedMintData("Copied data appears improperly formatted. Did you copy the data from mint.com?")
+        
         lines = allMoneyData.split("\n")
         
         for line in lines:
@@ -47,4 +57,8 @@ class Accounts:
         else:
             self.accountIndex += 1
             return self.accounts[self.accountIndex - 1]
+        
+class ImproperlyFormattedMintData(Exception):
+    def __init__(self, message):
+        self.message = message
             
