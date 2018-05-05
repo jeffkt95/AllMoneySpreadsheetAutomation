@@ -2,11 +2,14 @@ from GoogleSheetInterface import GoogleSheetInterface
 from GoogleSheetsTable import GoogleSheetsTable
 from MintAccountsNameMap import MintAccountNotFound
 import Utilities
-
+    
 class AllMoneySpreadsheet(GoogleSheetInterface):
     #This is the ID of my test spreadsheet. Note this ID is simply the URL of the spreadsheet.
     TEST_SPREADSHEET_ID = '1MqfeN82WwZrRYT0wVPOGZSycg1-9bxNiPCYfDbHfFJA'
     REAL_SPREADSHEET_ID = '1wdMoEie0DjtNiMMkr11sVis5lO99aiwJJaLPl-u8JUk'
+    #Change this next variable based on whether you are testing or this is for real
+    SPREADSHEET_TO_USE = REAL_SPREADSHEET_ID
+
     LAST_ROW_NAMED_RANGE = "lastDataRow"
     DOW_DATA_COLUMN = "M"
 
@@ -16,21 +19,27 @@ class AllMoneySpreadsheet(GoogleSheetInterface):
     START_COLUMN_COPY = 14
     END_COLUMN_COPY = 19
     
+    mRowData = 0
+    
     def __init__(self):
-        GoogleSheetInterface.__init__(self, self.REAL_SPREADSHEET_ID)
+        GoogleSheetInterface.__init__(self, self.SPREADSHEET_TO_USE)
         
+    def getSpreadsheetUrl(self):
+        spreadsheetId = self.getSpreadsheetId()
+        return "https://docs.google.com/spreadsheets/d/" + spreadsheetId + "/edit#gid=0&range=A" + str(self.mRowData - 3)
+    
     def addNewRowForData(self):
-        rowNumber = self.getRowOfNamedRange(self.LAST_ROW_NAMED_RANGE)
-        rowAdded = self.addRow(self.SHEET_NAME, rowNumber)
-        self.copyPasteRow(self.SHEET_NAME, rowAdded - 1, rowAdded)
+        self.mRowData = self.getRowOfNamedRange(self.LAST_ROW_NAMED_RANGE)
+        self.mRowData = self.addRow(self.SHEET_NAME, self.mRowData)
+        self.copyPasteRow(self.SHEET_NAME, self.mRowData - 1, self.mRowData)
         
         dateStr = Utilities.getDateStr()
-        self.setCellValue("A" + str(rowAdded), dateStr, self.SHEET_NAME)
+        self.setCellValue("A" + str(self.mRowData), dateStr, self.SHEET_NAME)
 
         #Clear all data between columns 2 through 13
-        self.setCellsValue("B" + str(rowAdded) + ":M" + str(rowAdded), [[""], [""], [""], [""], [""], [""], [""], [""], [""], [""], [""], [""]], self.SHEET_NAME)
+        self.setCellsValue("B" + str(self.mRowData) + ":M" + str(self.mRowData), [[""], [""], [""], [""], [""], [""], [""], [""], [""], [""], [""], [""]], self.SHEET_NAME)
         
-        return rowAdded
+        return self.mRowData
         
     def setDow(self, rowForNewData, dowValue):
         self.setCellValue(self.DOW_DATA_COLUMN + str(rowForNewData), dowValue, self.SHEET_NAME)
