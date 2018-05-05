@@ -17,6 +17,9 @@ class GoogleSheetInterface:
     def __init__(self, spreadsheetId):
         self.spreadsheetId = spreadsheetId
         
+    def getSpreadsheetId(self):
+        return self.spreadsheetId
+        
     def connect(self):
         credentials = self.get_credentials()
         http = credentials.authorize(httplib2.Http())
