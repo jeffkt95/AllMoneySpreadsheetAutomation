@@ -51,12 +51,17 @@ class Accounts:
     def __iter__(self):
         return self
         
-    def next(self):
+    #Required for Python 3
+    def __next__(self):
         if (self.accountIndex >= len(self.accounts)):
             raise StopIteration
         else:
             self.accountIndex += 1
             return self.accounts[self.accountIndex - 1]
+    
+    #Required for python 2
+    def next(self):
+        return self.__next__()
         
 class ImproperlyFormattedMintData(Exception):
     def __init__(self, message):

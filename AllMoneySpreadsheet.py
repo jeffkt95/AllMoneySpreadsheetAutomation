@@ -1,5 +1,4 @@
 from GoogleSheetInterface import GoogleSheetInterface
-from GoogleSheetsTable import GoogleSheetsTable
 from MintAccountsNameMap import MintAccountNotFound
 import Utilities
     
