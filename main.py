@@ -5,13 +5,14 @@ from MintAccountsNameMap import MintAccountsNameMap
 from Accounts import ImproperlyFormattedMintData
 import StockData
 import webbrowser
+from builtins import input
 
 #Besides running the allMoneyScript, this method runs all the stuff you would do manually before and after
 def main():
     webbrowser.open("https://mint.intuit.com/overview.event")
-    wait = raw_input("Copy account data from mint.com then press enter.")
+    wait = input("Copy account data from mint.com then press enter.")
     allMoneySpreadsheet = allMoneyScript(True)
-    wait = raw_input("All done!")
+    wait = input("All done!")
     
 #This script grabs what's on the clipboard from a mint.com copy and puts it into the AllMoney spreadseheet in the right place.
 #It also grabs the dow.
