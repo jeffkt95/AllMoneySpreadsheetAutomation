@@ -45,12 +45,14 @@ def allMoneyScript(launchSpreadsheet = False):
     print("Putting mint data into spreadsheet...")
     allMoneySpreadsheet.setAccountsData(accountsFromMint, mintAccountsNameMap, rowNum)
     
-    print("Getting the DOW...")
+    print("Getting the DOW and S&P500...")
     try:
         dowValue = StockData.getStockPrice("DJI")
         allMoneySpreadsheet.setDow(rowNum, dowValue)
+        spValue = StockData.getStockPrice("SPX")
+        allMoneySpreadsheet.setSpIndex(rowNum, spValue)
     except Exception as err:
-        print("Error getting DOW: " + err.message)
+        print("Error getting stock values: " + str(err))
     
     print("Done.")
     

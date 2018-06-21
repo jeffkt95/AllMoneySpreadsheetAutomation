@@ -11,12 +11,13 @@ class AllMoneySpreadsheet(GoogleSheetInterface):
 
     LAST_ROW_NAMED_RANGE = "lastDataRow"
     DOW_DATA_COLUMN = "M"
+    SPINDEX_DATA_COLUMN = "N"
 
     SHEET_NAME = "Data"
     
     #From START_COLUMN_COPY to END_COLUMN_COPY are calc'd cells that should just be copied from previous row.
-    START_COLUMN_COPY = 14
-    END_COLUMN_COPY = 19
+    START_COLUMN_COPY = 15
+    END_COLUMN_COPY = 20
     
     mRowData = 0
     
@@ -35,13 +36,16 @@ class AllMoneySpreadsheet(GoogleSheetInterface):
         dateStr = Utilities.getDateStr()
         self.setCellValue("A" + str(self.mRowData), dateStr, self.SHEET_NAME)
 
-        #Clear all data between columns 2 through 13
-        self.setCellsValue("B" + str(self.mRowData) + ":M" + str(self.mRowData), [[""], [""], [""], [""], [""], [""], [""], [""], [""], [""], [""], [""]], self.SHEET_NAME)
+        #Clear all data between columns 2 through 14
+        self.setCellsValue("B" + str(self.mRowData) + ":N" + str(self.mRowData), [[""], [""], [""], [""], [""], [""], [""], [""], [""], [""], [""], [""], [""]], self.SHEET_NAME)
         
         return self.mRowData
         
     def setDow(self, rowForNewData, dowValue):
         self.setCellValue(self.DOW_DATA_COLUMN + str(rowForNewData), dowValue, self.SHEET_NAME)
+    
+    def setSpIndex(self, rowForNewData, spValue):
+        self.setCellValue(self.SPINDEX_DATA_COLUMN + str(rowForNewData), spValue, self.SHEET_NAME)
     
     def setAccountsData(self, accountsFromMint, mintAccountsNameMap, rowToUpdate):
         for accountFromMint in accountsFromMint:
