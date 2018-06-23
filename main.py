@@ -10,8 +10,6 @@ from builtins import input
 
 #Besides running the allMoneyScript, this method runs all the stuff you would do manually before and after
 def main():
-    #webbrowser.open("https://mint.intuit.com/overview.event")
-    #wait = input("Copy account data from mint.com then press enter.")
     allMoneySpreadsheet = allMoneyScript(True)
     wait = input("All done!")
     
@@ -19,8 +17,7 @@ def main():
 #This script grabs what's on the clipboard from a mint.com copy and puts it into the AllMoney spreadseheet in the right place.
 #It also grabs the dow.
 def allMoneyScript(launchSpreadsheet = False):
-    mintConnection = MintConnection("jeffkt@alum.mit.edu", "Jkjc9511!")
-    #accountsCopiedFromMint = Utilities.getClipboard()
+    mintConnection = MintConnection("jeffkt@alum.mit.edu", password)
 
     accountsFromMint = Accounts()
     #try:
