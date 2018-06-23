@@ -38,6 +38,12 @@ class Accounts:
                 accountName = line[periodIndex+3:]
                 self.addAccount(accountName, amount)
         
+    def getAccountsFromMintAccounts(self, mintAccounts):
+        for accountData in mintAccounts:
+            accountName = accountData['accountName']
+            amount = accountData['value']
+            self.addAccount(accountName, amount)        
+
     def __str__(self):
         string = "Accounts:\n"
         totalAmount = 0
