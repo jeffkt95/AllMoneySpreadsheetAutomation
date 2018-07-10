@@ -45,7 +45,9 @@ class Accounts:
             string = string + "    " + str(account) + "\n"
             totalAmount = totalAmount + float(account.getAmount())
         
-        string = string + "TOTAL AMOUNT: " + str(totalAmount)
+        #At least for Mint, the total is meaningless, since there is extra 'accounts' in there. For example the total from mint is copied
+        #   in as its own account, so that is added to the overall total. So everything is double counted.
+        #string = string + "TOTAL AMOUNT: " + str(totalAmount)
         return string
         
     def __iter__(self):
