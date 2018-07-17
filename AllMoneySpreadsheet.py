@@ -35,6 +35,7 @@ class AllMoneySpreadsheet(GoogleSheetInterface):
         
         dateStr = Utilities.getDateStr()
         self.setCellValue("A" + str(self.mRowData), dateStr, self.SHEET_NAME)
+        self.formatCell(self.mRowData, 1, "m/d/yyyy", self.SHEET_NAME)
 
         #Clear all data between columns 2 through 14
         self.setCellsValue("B" + str(self.mRowData) + ":N" + str(self.mRowData), [[""], [""], [""], [""], [""], [""], [""], [""], [""], [""], [""], [""], [""]], self.SHEET_NAME)

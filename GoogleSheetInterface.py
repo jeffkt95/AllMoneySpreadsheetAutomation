@@ -85,6 +85,35 @@ class GoogleSheetInterface:
         result = self.service.spreadsheets().values().update(
             spreadsheetId=self.spreadsheetId, range=cellAddress, body=myBody, valueInputOption='USER_ENTERED').execute()
     
+    def formatCell(self, row, column, format, worksheetName):
+        worksheetId = self.getWorksheetIdByName(worksheetName)
+    
+        myBody = {u'requests': [
+        {
+            u'repeatCell': {
+                u'range': {
+                    u'sheetId': str(worksheetId),
+                    u'startRowIndex': str(row-1),
+                    u'endRowIndex': str(row),
+                    u'startColumnIndex': str(column-1),
+                    u'endColumnIndex': str(column)
+                },
+                u'cell': {
+                    u'userEnteredFormat': {
+                        u'numberFormat': {
+                            u'type': u'DATE',
+                            u'pattern': format
+                        }
+                    }
+                },
+                u'fields': u'userEnteredFormat.numberFormat'
+            }
+        }
+        ]}
+        
+        self.service.spreadsheets().batchUpdate(
+            spreadsheetId=self.spreadsheetId, body=myBody).execute()
+    
     #Returns index to added row
     def addRow(self, worksheetName, aboveRow):
         worksheetId = self.getWorksheetIdByName(worksheetName)
