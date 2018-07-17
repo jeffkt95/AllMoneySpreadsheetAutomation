@@ -2,10 +2,12 @@ import Utilities
 from Accounts import Accounts
 from AllMoneySpreadsheet import AllMoneySpreadsheet
 from MintAccountsNameMap import MintAccountsNameMap
+from MintConnection import MintConnection
 from Accounts import ImproperlyFormattedMintData
 import StockData
 import webbrowser
 from builtins import input
+#import getpass
 
 #Besides running the allMoneyScript, this method runs all the stuff you would do manually before and after
 def main():
@@ -18,10 +20,11 @@ def main():
 #It also grabs the dow.
 def allMoneyScript(launchSpreadsheet = False):
     accountsCopiedFromMint = Utilities.getClipboard()
-    #with open('testData3.txt', 'r') as myfile:
-    #    accountsCopiedFromMint = myfile.read()
-    
+    #password = getpass.getpass(prompt="Enter Mint password: ")
+    #mintConnection = MintConnection("jeffkt@alum.mit.edu", password)
+
     accountsFromMint = Accounts()
+    #accountsFromMint.getAccountsFromMintAccounts(mintConnection.getAccounts())
     try:
         accountsFromMint.getAccountsFromMintCopy(accountsCopiedFromMint)
     except ImproperlyFormattedMintData as err:

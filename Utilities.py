@@ -34,7 +34,7 @@ def is_number(s):
   
 def getDateStr():
     now = datetime.datetime.now()
-    return str(now.strftime("%m/%d/%Y"))
+    return str(now.strftime("%m/%d/%Y %H:%M"))
 
 def getDateStrNumDaysAgo(numDaysAgo = 0):
     dateToReturn = datetime.datetime.now()
