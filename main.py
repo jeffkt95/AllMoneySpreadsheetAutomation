@@ -2,7 +2,7 @@ import Utilities
 from Accounts import Accounts
 from AllMoneySpreadsheet import AllMoneySpreadsheet
 from MintAccountsNameMap import MintAccountsNameMap
-from MintConnection import MintConnection
+#from MintConnection import MintConnection
 from Accounts import ImproperlyFormattedMintData
 import StockData
 import webbrowser
