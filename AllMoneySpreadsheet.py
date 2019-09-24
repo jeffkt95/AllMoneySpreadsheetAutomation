@@ -26,7 +26,7 @@ class AllMoneySpreadsheet(GoogleSheetInterface):
 
     def getSpreadsheetUrl(self):
         spreadsheetId = self.getSpreadsheetId()
-        return "https://docs.google.com/spreadsheets/d/" + spreadsheetId + "/edit#gid=0&range=A" + str(self.mRowData - 3)
+        return "https://docs.google.com/spreadsheets/d/" + spreadsheetId + "/edit#gid=0&range=A" + str(self.mRowData - 1)
 
     def addNewRowForData(self):
         self.mRowData = self.getRowOfNamedRange(self.LAST_ROW_NAMED_RANGE)
